@@ -85,7 +85,7 @@ bool MenuSettings::init()
 	auto* musicStatus = musicOff;
 	auto* musicChoice = musicOn;
 
-	if (isMusic) {
+	if (SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying()) {
 		 musicStatus = musicOn;
 		 musicChoice = musicOff;
 	}
@@ -150,15 +150,14 @@ void MenuSettings::menuMusicCallback(Ref* pSender)
 	auto* musicControlItem = (MenuItemToggle*)pSender;
 	log("menuMusicCallback %d", musicControlItem->getSelectedIndex());
 
-	if (isMusic) //选中状态 Off -> On
+	if (SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying()) //选中状态 Off -> On
 	{
-		isMusic = false;
 		SimpleAudioEngine::getInstance()->stopBackgroundMusic("sound/backgroundMusic.mp3");
 	}
 	else
 	{
-		isMusic = true;
-		SimpleAudioEngine::getInstance()->playBackgroundMusic("sound/backgroundMusic.mp3");
+		SimpleAudioEngine::getInstance()->playBackgroundMusic("sound/backgroundMusic.mp3", true);
+		//true--->loop
 	}
 
 	if (isEffect) {
